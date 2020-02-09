@@ -26,7 +26,8 @@ export class OrdersgridComponent implements OnInit {
       orderState: "New",
       orderType: "FillOrKill",
       side: "Buy",
-      price: 100
+      price: 100,
+      percentComplete: 20
     },
     {
       id: 2,
@@ -41,7 +42,8 @@ export class OrdersgridComponent implements OnInit {
       orderState: "New",
       orderType: "FillOrKill",
       side: "Sell",
-      price: 105
+      price: 105,
+      percentComplete: 80
     }
 
   ];

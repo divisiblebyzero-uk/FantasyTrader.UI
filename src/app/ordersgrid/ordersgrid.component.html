@@ -1,5 +1,10 @@
-<p>ordersgrid works!</p>
+<p>Recent orders</p>
 
-<div *ngFor="let order of orders" class="card">
-    {{order.side}} {{order.quantity}} x {{order.symbol}} @ {{order.price}}
+<div class="card-container">
+    <div *ngFor="let order of orders" class="ordercard">
+        <div class="progress">
+        <div class="progress-{{order.side}}" [ngStyle]="{'width': order.percentComplete + '%'}"></div>
+        </div>
+        <div>{{order.side}} {{order.quantity}} x {{order.symbol}} @ {{order.price}}</div>
+    </div>
 </div>

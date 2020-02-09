@@ -1,5 +1,10 @@
-
-  .card {
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 16px;
+}
+  .ordercard {
     border-radius: 4px;
     border: 1px solid #eee;
     background-color: #fafafa;
@@ -8,9 +13,41 @@
     margin: 0 8px 16px;
     padding: 16px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     transition: all 0.2s ease-in-out;
     line-height: 24px;
   }
+
+  .progress {
+    position:relative;
+    height: 10px;
+    width: 100%;
+    background: grey;
+  }
+
+  .progress-Buy {
+    content:'\A';
+    position:absolute;
+    background:green;
+    top:0;
+    bottom:0;
+    left:0;
+    -webkit-animation:filler 2s ease-in-out;
+    -moz-animation:filler 2s ease-in-out;
+    animation:filler 2s ease-in-out;    
+  }
+
+  .progress-Sell {
+    content:'\A';
+    position:absolute;
+    background:red;
+    top:0;
+    bottom:0;
+    left:0;
+    -webkit-animation:filler 2s ease-in-out;
+    -moz-animation:filler 2s ease-in-out;
+    animation:filler 2s ease-in-out;    
+  }
+  
