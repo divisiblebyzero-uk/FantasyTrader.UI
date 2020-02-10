@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Order } from '../order';
+import { OrderService } from '../order.service';
+import { ORDERS } from '../mock-orders';
 
 @Component({
   selector: 'app-ordersgrid',
@@ -7,45 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OrdersgridComponent implements OnInit {
 
-  constructor() { }
+  constructor(private orderService: OrderService) { }
 
+  getOrders(): void {
+    this.orderService.getOrders().subscribe(orders => this.orders = orders);
+  }
+  
   ngOnInit() {
+    this.getOrders();
   }
 
-  public orders = [
-    {
-      id: 1,
-      clientOrderId: "MY ORDER1",
-      symbol: "ABC",
-      account: {
-        id: 1,
-        name: "My Account"
-      },
-      quantity: 100,
-      fillQuantity: 0,
-      orderState: "New",
-      orderType: "FillOrKill",
-      side: "Buy",
-      price: 100,
-      percentComplete: 20
-    },
-    {
-      id: 2,
-      clientOrderId: "MY ORDER2",
-      symbol: "ABC",
-      account: {
-        id: 1,
-        name: "My Account"
-      },
-      quantity: 100,
-      fillQuantity: 0,
-      orderState: "New",
-      orderType: "FillOrKill",
-      side: "Sell",
-      price: 105,
-      percentComplete: 80
-    }
-
-  ];
+  orders: Order[];
 
 }
