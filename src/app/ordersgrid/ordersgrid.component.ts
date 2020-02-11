@@ -14,6 +14,8 @@ export class OrdersgridComponent implements OnInit {
 
   getOrders(): void {
     this.orderService.getOrders().subscribe(orders => this.orders = orders);
+    this.orderService.startConnection();
+    this.orderService.addNewOrderListener();
   }
   
   ngOnInit() {

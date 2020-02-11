@@ -6,6 +6,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+import * as signalR from "@aspnet/signalr";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,6 +16,33 @@ export class OrderService {
   constructor(private http: HttpClient, private messageService: MessageService) { }
 
   private ordersUrl = "https://localhost:5001/api/orders";
+
+  private hubConnection: signalR.HubConnection;
+
+  private startConnectionActual(): void {
+    this.hubConnection.start()
+      .then(() => this.messageService.add('Connection started'))
+      .catch(err => this.messageService.add('Error while starting connection: ' + err));
+  }
+
+  public startConnection = () => {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:5001/order')
+      .build();
+    
+    this.startConnectionActual();
+
+    this.hubConnection.onclose(() => {
+      this.messageService.add('Connection dropped ... waiting 3s to restart');
+      setTimeout(function() {
+        this.startConnectionActual();
+      }, 3000);
+    });
+  }
+
+  public addNewOrderListener = () => {
+    this.hubConnection.on('New Order', (data) => this.messageService.add('New order: ' + data.clientOrderId));
+  }
 
   public getOrders(): Observable<Order[]> {
     this.messageService.add('OrderService: fetched orders');
