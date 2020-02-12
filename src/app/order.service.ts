@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Order } from './order';
 import { ORDERS } from './mock-orders';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -40,8 +40,17 @@ export class OrderService {
     });
   }
 
+  private orders: Subject<Order> = new Subject<Order>();
+
+  public getOrder(): Observable<Order> {
+    return this.orders.asObservable();
+  }
+
   public addNewOrderListener = () => {
-    this.hubConnection.on('New Order', (data) => this.messageService.add('New order: ' + data.clientOrderId));
+    this.hubConnection.on('New Order', (data) => {
+      this.messageService.add('New order: ' + data.clientOrderId);
+      this.orders.next(data);
+    });
   }
 
   public getOrders(): Observable<Order[]> {
