@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'FrontEnd';
-  public showPrices: boolean = false;
-  public showOrders: boolean = true;
+  public showPrices: boolean = true;
+  public showOrders: boolean = false;
   public showPnL: boolean = false;
 }
