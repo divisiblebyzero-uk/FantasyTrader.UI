@@ -26,4 +26,7 @@ export class OrdersgridComponent implements OnInit {
 
   orders: Order[];
 
+  refreshOrders(): void {
+    this.orderService.getOrders().subscribe(orders => this.orders = orders);
+  }
 }

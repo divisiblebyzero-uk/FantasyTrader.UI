@@ -5,7 +5,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { OktaAuthService } from '@okta/okta-angular';
 import * as signalR from "@aspnet/signalr";
 
 @Injectable({
@@ -13,11 +13,17 @@ import * as signalR from "@aspnet/signalr";
 })
 export class OrderService {
 
-  constructor(private http: HttpClient, private messageService: MessageService) { }
+  constructor(private http: HttpClient, private messageService: MessageService, private oktaAuth: OktaAuthService) { }
 
   private ordersUrl = "https://localhost:5001/api/orders";
 
   private hubConnection: signalR.HubConnection;
+
+  private accessToken: string;
+
+  public setAccessToken(accessToken: string) {
+    this.accessToken = accessToken;
+  }
 
   private startConnectionActual(): void {
     this.hubConnection.start()
@@ -54,9 +60,17 @@ export class OrderService {
   }
 
   public getOrders(): Observable<Order[]> {
-    this.messageService.add('OrderService: fetched orders');
-    
-    return this.http.get<Order[]>(this.ordersUrl)
+    this.messageService.add('OrderService: fetching orders');
+    //let headers = new HttpHeaders();
+    //headers.append('Content-Type', 'application/json');
+    //let token = this.oktaAuth.getAccessToken();
+    let token = this.accessToken;
+    const headers = new HttpHeaders({
+      Authorization: 'Bearer ' + token
+    });
+    headers.append('Authorization', 'Bearer ' + token);
+    this.messageService.add('Auth: ' + token);
+    return this.http.get<Order[]>(this.ordersUrl, {headers})
         .pipe(
           tap(_ => this.log('fetched orders')),
       catchError(this.handleError<Order[]>('getOrders', []))
