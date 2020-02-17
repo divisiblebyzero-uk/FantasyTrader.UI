@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Order } from '../order';
 import { OrderService } from '../order.service';
 import { ORDERS } from '../mock-orders';
+import { LogonService } from '../logon.service';
 
 @Component({
   selector: 'app-ordersgrid',
@@ -10,7 +11,7 @@ import { ORDERS } from '../mock-orders';
 })
 export class OrdersgridComponent implements OnInit {
 
-  constructor(private orderService: OrderService) { }
+  constructor(private orderService: OrderService, private logonService: LogonService) { }
 
   getOrders(): void {
     this.orderService.getOrders().subscribe(orders => this.orders = orders);
@@ -21,7 +22,13 @@ export class OrdersgridComponent implements OnInit {
   }
   
   ngOnInit() {
-    this.getOrders();
+    if (this.logonService.isAuthenticated) {
+      this.getOrders();
+    } else {
+      this.logonService.getAuthStatusChanges().subscribe(isAuth => {
+        if (isAuth) { this.getOrders() };
+      });
+    }
   }
 
   orders: Order[];

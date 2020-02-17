@@ -7,23 +7,18 @@ import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { OktaAuthService } from '@okta/okta-angular';
 import * as signalR from "@aspnet/signalr";
+import { LogonService } from './logon.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
 
-  constructor(private http: HttpClient, private messageService: MessageService, private oktaAuth: OktaAuthService) { }
+  constructor(private http: HttpClient, private messageService: MessageService, private logonService: LogonService) { }
 
   private ordersUrl = "https://localhost:5001/api/orders";
 
   private hubConnection: signalR.HubConnection;
-
-  private accessToken: string;
-
-  public setAccessToken(accessToken: string) {
-    this.accessToken = accessToken;
-  }
 
   private startConnectionActual(): void {
     this.hubConnection.start()
@@ -61,15 +56,18 @@ export class OrderService {
 
   public getOrders(): Observable<Order[]> {
     this.messageService.add('OrderService: fetching orders');
+    if (!this.logonService.isAuthenticated) {
+      this.messageService.add('OrderService: not logged on');
+      return null;
+    }
     //let headers = new HttpHeaders();
     //headers.append('Content-Type', 'application/json');
     //let token = this.oktaAuth.getAccessToken();
-    let token = this.accessToken;
+    let token = this.logonService.authToken;
     const headers = new HttpHeaders({
       Authorization: 'Bearer ' + token
     });
     headers.append('Authorization', 'Bearer ' + token);
-    this.messageService.add('Auth: ' + token);
     return this.http.get<Order[]>(this.ordersUrl, {headers})
         .pipe(
           tap(_ => this.log('fetched orders')),

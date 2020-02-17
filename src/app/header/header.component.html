@@ -1,20 +1,25 @@
-<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-1" href="#">Fantasy Trader</a>
-  <!--a class="nav-link" href="#">Administration</a-->
-  <div *ngIf="username">
-    <h2>Hi, {{username}}!</h2>
-  </div>
-  
-  <div>
-    <button *ngIf="!isAuthenticated" (click)="login()"> Login </button>
-    <button *ngIf="isAuthenticated" (click)="logout()"> Logout </button>
+<!-- A grey horizontal navbar that becomes vertical on small screens -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <a class="navbar-brand" href="#">Fantasy Trader</a>
+  <!-- Links -->
+  <ul class="nav navbar-nav" routerLinkActive="active">
+    <li class="nav-item dropdown" *ngIf="isAuthenticated">
+      <a class="nav-link" href="#" data-toggle="dropdown">{{username}}</a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#" (click)="logout()">Logout</a>
       </div>
-  <div class="flex-grow-0">
-    <ul class="navbar-nav text-right">
-      <li class="nav-item text-nowrap">
-        <a class="nav-link" routerLink="/administration">Admin</a>
-      </li>
-    </ul>
-  </div>
+    </li>
+    <li class="nav-item" *ngIf="!isAuthenicated">
+      <button class="btn btn-success" *ngIf="!isAuthenticated" (click)="login()"> Login </button>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="dashboard" routerLinkActive="active">Dashboard</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="pnl" routerLinkActive="active">Profit & loss</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="administration" routerLinkActive="active">Administration</a>
+    </li>
+  </ul>
 </nav>
-<button (click)="printDetails()">Print Details</button>

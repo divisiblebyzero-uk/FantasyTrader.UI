@@ -8,10 +8,10 @@ import {
 
 const routes: Routes = [
     {
-        path: '',
+        path: 'dashboard',
         component: DashboardComponent,
     }, {
-      path: 'x',
+      path: '',
       redirectTo: '/dashboard',
       pathMatch: 'full'
     },
