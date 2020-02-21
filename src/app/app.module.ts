@@ -13,7 +13,7 @@ import { HeaderComponent } from './header/header.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { AppRoutingModule } from './app-routing/app-routing.module';
-
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 export function socialConfigs() {  
   const config = new AuthServiceConfig(  
@@ -43,7 +43,8 @@ export function socialConfigs() {
     BrowserModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FontAwesomeModule
   ],
   providers: [
     AuthService,  

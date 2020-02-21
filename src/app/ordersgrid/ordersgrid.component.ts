@@ -3,6 +3,7 @@ import { Order } from '../order';
 import { OrderService } from '../order.service';
 import { ORDERS } from '../mock-orders';
 import { LogonService } from '../logon.service';
+import { faSync } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-ordersgrid',
@@ -10,6 +11,8 @@ import { LogonService } from '../logon.service';
   styleUrls: ['./ordersgrid.component.css']
 })
 export class OrdersgridComponent implements OnInit {
+
+  faSync = faSync;
 
   constructor(private orderService: OrderService, private logonService: LogonService) { }
 

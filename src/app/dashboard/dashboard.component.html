@@ -1,15 +1,43 @@
 
+<div id="container">
 
+  <div class="card">
+    <div class="card-header">
+      <a class="card-link" data-toggle="collapse" href="#collapseOne">
+        Prices
+      </a>
+    </div>
+    <div id="collapseOne" class="collapse">
+      <div class="card-body">
+        <app-pricegrid></app-pricegrid>
+      </div>
+    </div>
+  </div>
 
-    <div *ngIf="showPrices">
-      <app-pricegrid></app-pricegrid>
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+        Orders
+      </a>
     </div>
-    <div *ngIf="showOrders">
-      <app-ordersgrid></app-ordersgrid>
+    <div id="collapseTwo" class="collapse show">
+      <div class="card-body">
+        <app-ordersgrid></app-ordersgrid>
+      </div>
     </div>
-    <div *ngIf="showPnL">
-      <span> PnL </span>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+        PnL
+      </a>
     </div>
-  
-  
-  
+    <div id="collapseThree" class="collapse">
+      <div class="card-body">
+        <span> PnL </span>
+      </div>
+    </div>
+  </div>
+
+</div>
