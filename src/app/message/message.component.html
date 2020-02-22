@@ -1,26 +1,15 @@
-
-
-
-
-  <div id="container" *ngIf="messageService.messages.length">
-
-        <div class="card">
-          <div class="card-header">
-            <a class="card-link" data-toggle="collapse" href="#collapseMessages">
-              Messages
-            </a>
-          </div>
-          <div id="collapseMessages" class="collapse">
-            <div class="card-body">
-                <button class="clear"
-                        (click)="messageService.clear()">clear</button>
-                <table>
-                        <tr *ngFor='let message of messageService.messages'>
-                                <td nowrap>{{message[0] | date: 'dd/MM/yyyy HH:mm:ss'}}</td><td>{{message[1]}}</td>
-                        </tr> 
-                </table>
-            </div>
-          </div>
-        </div>
-      
-      </div>
+<div id="container" *ngIf="messageService.messages.length">
+  <ngb-accordion #acc="ngbAccordion">
+    <ngb-panel title="Messages">
+      <ng-template ngbPanelContent>
+        <button class="clear" (click)="messageService.clear()">clear</button>
+        <table>
+          <tr *ngFor='let message of messageService.messages'>
+            <td nowrap>{{message[0] | date: 'dd/MM/yyyy HH:mm:ss'}}</td>
+            <td>{{message[1]}}</td>
+          </tr>
+        </table>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+</div>

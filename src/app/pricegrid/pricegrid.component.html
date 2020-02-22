@@ -1,52 +1,34 @@
-<div class="card">
-  <div class="card-body">
-    This is some text within a card body.
-  </div>
-</div>
-
-<div class="card" style="width: 60rem;">
-  
-  <div class="card-body">
-    <h5 class="card-title">Prices</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-</div>
-<p>pricegrid works!</p>
-
-<ul class="nav nav-tabs">
-  <li class="active"><a data-toggle="tab" href="#">Choose Your Tab</a></li>
-  <li *ngFor="let priceGrid of priceGrids"><a data-toggle="tab" href="#">{{priceGrid.name}}</a></li>
-</ul>
-
-<div class="tab-content" *ngFor="let priceGrid of priceGrids">
-  <div id="Choose Your Tab">asdjkasdjks</div>
-  <div id="My Grid" class="tab-pane fade in active">
-    ashdhdjshj
-    <table class="table">
-      <tr>
-        <th>Symbol</th>
-        <th>Price</th>
-      </tr>
-      <tr *ngFor="let priceGridEntry of priceGridEntries">
-        <td>{{priceGridEntry.symbol}}</td>
-        <td>Price</td>
-      </tr>
-    </table>
-  </div>
-
-</div>
 
 
-<!--
-    <mat-tab *ngFor="let priceGrid of priceGrids" label="{{priceGrid.name}}">
-      <table>
+
+
+
+
+
+
+<ul ngbNav #pricesNav="ngbNav" [(activeId)]="active" class="nav-tabs">
+  <li ngbNavItem  [ngbNavItem]="1">
+    <a ngbNavLink>Price Grids</a>
+    <ng-template ngbNavContent>
+      Click on a price grid to show that grid
+    </ng-template>
+  </li>
+  <li *ngFor="let priceGrid of priceGrids; let i = index" ngbNavItem>
+    <a ngbNavLink>{{priceGrid.name}}</a>
+    <ng-template ngbNavContent>
+      <table class="table">
+        <tr>
+          <th>Symbol</th>
+          <th>Price</th>
+        </tr>
         <tr *ngFor="let priceGridEntry of priceGridEntries">
           <td>{{priceGridEntry.symbol}}</td>
           <td>Price</td>
         </tr>
       </table>
-    </mat-tab>
-</mat-tab-group>
+      </ng-template>
+  </li>
+</ul>
 
--->
+<div [ngbNavOutlet]="pricesNav" class="mt-2"></div>
+<pre>Active: {{ active }}</pre>

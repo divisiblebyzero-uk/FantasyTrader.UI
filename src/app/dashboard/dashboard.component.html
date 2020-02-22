@@ -1,43 +1,25 @@
-
 <div id="container">
-
-  <div class="card">
-    <div class="card-header">
-      <a class="card-link" data-toggle="collapse" href="#collapseOne">
-        Prices
-      </a>
-    </div>
-    <div id="collapseOne" class="collapse show">
-      <div class="card-body">
-        <app-pricegrid></app-pricegrid>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
-        Orders
-      </a>
-    </div>
-    <div id="collapseTwo" class="collapse">
-      <div class="card-body">
-        <app-ordersgrid></app-ordersgrid>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-header">
-      <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
-        PnL
-      </a>
-    </div>
-    <div id="collapseThree" class="collapse">
-      <div class="card-body">
-        <span> PnL </span>
-      </div>
-    </div>
-  </div>
-
+  <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+    <ngb-panel title="Prices">
+      <ng-template ngbPanelContent>
+        <div class="card-body">
+          <app-pricegrid></app-pricegrid>
+        </div>
+        </ng-template>
+    </ngb-panel>
+    <ngb-panel title="Orders">
+      <ng-template ngbPanelContent>
+        <div class="card-body">
+          <app-ordersgrid></app-ordersgrid>
+        </div>
+        </ng-template>
+    </ngb-panel>
+    <ngb-panel title="P&L">
+      <ng-template ngbPanelContent>
+        <div class="card-body">
+          <span> PnL </span>
+        </div>
+        </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
 </div>

@@ -12,6 +12,7 @@ import { faSync } from '@fortawesome/free-solid-svg-icons';
 })
 export class OrdersgridComponent implements OnInit {
 
+  spinning = false;
   faSync = faSync;
 
   constructor(private orderService: OrderService, private logonService: LogonService) { }

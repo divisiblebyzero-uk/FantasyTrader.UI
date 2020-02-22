@@ -9,7 +9,7 @@
         <a class="dropdown-item" href="#" (click)="logout()">Logout</a>
       </div>
     </li>
-    <li class="nav-item" *ngIf="!isAuthenicated">
+    <li class="nav-item" *ngIf="!isAuthenticated">
       <button class="btn btn-success" *ngIf="!isAuthenticated" (click)="login()"> Login </button>
     </li>
     <li class="nav-item">
