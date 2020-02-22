@@ -12,9 +12,33 @@
     <a href="#" class="btn btn-primary">Go somewhere</a>
   </div>
 </div>
-<!--
 <p>pricegrid works!</p>
-<mat-tab-group #tabRef (selectedTabChange)="changeTab(tabRef.selectedIndex)">
+
+<ul class="nav nav-tabs">
+  <li class="active"><a data-toggle="tab" href="#">Choose Your Tab</a></li>
+  <li *ngFor="let priceGrid of priceGrids"><a data-toggle="tab" href="#">{{priceGrid.name}}</a></li>
+</ul>
+
+<div class="tab-content" *ngFor="let priceGrid of priceGrids">
+  <div id="Choose Your Tab">asdjkasdjks</div>
+  <div id="My Grid" class="tab-pane fade in active">
+    ashdhdjshj
+    <table class="table">
+      <tr>
+        <th>Symbol</th>
+        <th>Price</th>
+      </tr>
+      <tr *ngFor="let priceGridEntry of priceGridEntries">
+        <td>{{priceGridEntry.symbol}}</td>
+        <td>Price</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+
+<!--
     <mat-tab *ngFor="let priceGrid of priceGrids" label="{{priceGrid.name}}">
       <table>
         <tr *ngFor="let priceGridEntry of priceGridEntries">
@@ -24,4 +48,5 @@
       </table>
     </mat-tab>
 </mat-tab-group>
+
 -->
