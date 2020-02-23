@@ -25,7 +25,7 @@ export class PricegridService {
     );;
   }
 
-  public getPriceGridEntries(priceGrid: PriceGrid): Observable<PriceGridEntry[]> {
+  public getPriceGridEntries(priceGridName: string): Observable<PriceGridEntry[]> {
     this.messageService.add('PriceGridService: fetching price grids entries');
     
     return this.http.get<PriceGridEntry[]>(this.priceGridEntriesUrl)

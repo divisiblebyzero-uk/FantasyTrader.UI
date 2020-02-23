@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PriceGrid, PriceGridEntry } from '../pricegrid';
 import { PricegridService } from '../pricegrid.service';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-pricegrid',
@@ -9,7 +10,8 @@ import { PricegridService } from '../pricegrid.service';
 })
 export class PricegridComponent implements OnInit {
 
-  constructor(private priceGridService: PricegridService) { }
+  activePriceGrid;
+  constructor(private priceGridService: PricegridService, private messageService: MessageService) { }
 
   ngOnInit() {
     this.getPriceGrids();
@@ -19,9 +21,8 @@ export class PricegridComponent implements OnInit {
     this.priceGridService.getPriceGrids().subscribe(priceGrids => this.priceGrids = priceGrids);
   }
 
-  changeTab(newIndex) {
-    this.selectedPriceGrid = newIndex;
-    this.priceGridService.getPriceGridEntries(this.priceGrids[this.selectedPriceGrid]).subscribe(priceGridEntries => this.priceGridEntries = priceGridEntries);
+  tabChanged(newIndex) {
+    this.priceGridService.getPriceGridEntries(this.activePriceGrid).subscribe(priceGridEntries => {this.messageService.add("Received: " + JSON.stringify(priceGridEntries));this.priceGridEntries = priceGridEntries;});
   }
 
   selectedPriceGrid: number;
