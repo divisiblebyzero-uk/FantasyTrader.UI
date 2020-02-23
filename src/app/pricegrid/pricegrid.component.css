@@ -1,0 +1,28 @@
+.direction-0 {
+
+}
+.direction-1 {
+    animation: buy 2s;
+}
+.direction--1 {
+    animation: sell 2s;
+}
+
+@keyframes buy {
+    0% {
+        background: lightblue;
+    }
+    100% {
+        background: white;
+    }
+}
+
+
+@keyframes sell {
+    0% {
+        background: lightpink;
+    }
+    100% {
+        background: white;
+    }
+}

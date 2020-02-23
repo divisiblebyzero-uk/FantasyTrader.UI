@@ -15,7 +15,7 @@
         </tr>
         <tr *ngFor="let priceGridEntry of priceGridEntries">
           <td>{{priceGridEntry.symbol}}</td>
-          <td>Price</td>
+          <td [class]="'direction-'+prices[priceGridEntry.symbol]?.direction">{{prices[priceGridEntry.symbol]?.lastPrice}}</td>
         </tr>
       </table>
       </ng-template>
@@ -24,3 +24,8 @@
 
 <div [ngbNavOutlet]="pricesNav" class="mt-2"></div>
 <pre>Active: {{ activePriceGrid }}</pre>
+
+Market Status is: {{ marketStatus }}
+
+<button (click)="openMarket()">Open Market</button>
+<button (click)="closeMarket()">Close Market</button>

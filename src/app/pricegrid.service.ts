@@ -17,22 +17,22 @@ export class PricegridService {
 
   public getPriceGrids(): Observable<PriceGrid[]> {
     this.messageService.add('PriceGridService: fetching price grids');
-    
+
     return this.http.get<PriceGrid[]>(this.priceGridsUrl)
-        .pipe(
-          tap(_ => this.log('fetched price grids')),
-      catchError(this.handleError<PriceGrid[]>('getPriceGrids', []))
-    );;
+      .pipe(
+        tap(_ => this.log('fetched price grids')),
+        catchError(this.handleError<PriceGrid[]>('getPriceGrids', []))
+      );;
   }
 
   public getPriceGridEntries(priceGridName: string): Observable<PriceGridEntry[]> {
     this.messageService.add('PriceGridService: fetching price grids entries');
-    
+
     return this.http.get<PriceGridEntry[]>(this.priceGridEntriesUrl)
-        .pipe(
-          tap(_ => this.log('fetched price grid entries')),
-      catchError(this.handleError<PriceGridEntry[]>('getPriceGridEntries', []))
-    );;
+      .pipe(
+        tap(_ => this.log('fetched price grid entries')),
+        catchError(this.handleError<PriceGridEntry[]>('getPriceGridEntries', []))
+      );;
   }
 
   /**
@@ -41,20 +41,19 @@ export class PricegridService {
  * @param operation - name of the operation that failed
  * @param result - optional value to return as the observable result
  */
-private handleError<T> (operation = 'operation', result?: T) {
-  return (error: any): Observable<T> => {
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
 
-    // TODO: send the error to remote logging infrastructure
-    console.error(error); // log to console instead
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
 
-    // TODO: better job of transforming error for user consumption
-    this.log(`${operation} failed: ${error.message}`);
+      // TODO: better job of transforming error for user consumption
+      this.log(`${operation} failed: ${error.message}`);
 
-    // Let the app keep running by returning an empty result.
-    return of(result as T);
-  };
-}
-
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
+  }
   private log(message: string) {
     this.messageService.add(`PriceGridService: ${message}`);
   }

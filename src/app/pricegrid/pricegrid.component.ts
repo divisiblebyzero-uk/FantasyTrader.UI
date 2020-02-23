@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PriceGrid, PriceGridEntry } from '../pricegrid';
 import { PricegridService } from '../pricegrid.service';
 import { MessageService } from '../message.service';
+import * as signalR from "@aspnet/signalr";
+import { Price } from '../price';
 
 @Component({
   selector: 'app-pricegrid',
@@ -14,6 +16,10 @@ export class PricegridComponent implements OnInit {
   constructor(private priceGridService: PricegridService, private messageService: MessageService) { }
 
   ngOnInit() {
+    this.messageService.add("PGC: Starting Connection");
+    this.startConnection();
+    this.messageService.add("PGC: Adding Listener");
+    //this.priceGridService.addPriceUpdateListener();
     this.getPriceGrids();
   }
 
@@ -23,10 +29,87 @@ export class PricegridComponent implements OnInit {
 
   tabChanged(newIndex) {
     this.priceGridService.getPriceGridEntries(this.activePriceGrid).subscribe(priceGridEntries => {this.messageService.add("Received: " + JSON.stringify(priceGridEntries));this.priceGridEntries = priceGridEntries;});
+
+    this.messageService.add("PGC: Adding Subscription");
+    //this.priceGridService.addPriceSubscription('FTSY');
+    //this.priceGridService.getMarketState();
+    //this.orderService.getOrder().subscribe(order => this.orders.push(order));
+
   }
 
   selectedPriceGrid: number;
 
   priceGrids: PriceGrid[];
   priceGridEntries: PriceGridEntry[];
+
+  prices: Price[];
+  private priceHubUrl = "https://localhost:5001/price";
+  private hubConnection: signalR.HubConnection;
+  marketStatus;
+
+  public setMarketStatus(newStatus: string): void {
+    this.log("Setting market to: " + newStatus);
+    this.marketStatus = newStatus;
+  }
+
+  public startConnection = () => {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl(this.priceHubUrl)
+      .build();
+
+    this.hubConnection.start().then(
+      () => {
+        this.log("Connected");
+        this.hubConnection.invoke("GetAllPrices").then(prices => {
+          this.log(JSON.stringify(prices));
+          this.prices = prices;
+        });
+        this.hubConnection.invoke("GetMarketState").then(state => {
+          this.setMarketStatus(state);
+          this.log("The market is: " + state);
+          if (state === 'Open') {
+            this.startStreaming();
+          }
+        });
+      }
+    )
+
+    this.hubConnection.on("marketOpened", () => {
+      this.setMarketStatus("Opened");
+      this.startStreaming();
+    });
+
+    this.hubConnection.on("marketClosed", () => {
+      this.setMarketStatus("Closed");
+      this.startStreaming();
+    });
+
+    this.hubConnection.onclose(() => {
+      this.messageService.add('Price connection dropped ... ');
+    });
+  }
+  private startStreaming(): void {
+    this.hubConnection.stream("StreamPrices").subscribe({
+      next: price => this.consumePriceUpdate(price),
+      error: (err) => this.log(err),
+      complete: () => this.log("Stream complete")
+    });
+  }
+  private consumePriceUpdate(price: Price) {
+    this.prices[price.symbol] = price;
+  }
+
+  public openMarket(): void {
+    this.log("Opening Market");
+    this.hubConnection.invoke("OpenMarket");
+  }
+
+  public closeMarket(): void {
+    this.hubConnection.invoke("CloseMarket");
+  }
+
+  private log(message: string) {
+    this.messageService.add(`PriceGridService: ${message}`);
+  }
+
 }
