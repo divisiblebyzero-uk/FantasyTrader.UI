@@ -1,5 +1,8 @@
+.price {
+    cursor: pointer;
+}
 .direction-0 {
-
+    
 }
 .direction-1 {
     animation: buy 2s;

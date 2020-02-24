@@ -1,3 +1,4 @@
+<div class="container-fluid">
 <ul ngbNav #pricesNav="ngbNav" [(activeId)]="activePriceGrid" class="nav-tabs"  (activeIdChange)="tabChanged($event)">
   <li ngbNavItem [ngbNavItem]="'blank'">
     <a ngbNavLink>Price Grids</a>
@@ -15,7 +16,7 @@
         </tr>
         <tr *ngFor="let priceGridEntry of priceGridEntries">
           <td>{{priceGridEntry.symbol}}</td>
-          <td [class]="'direction-'+prices[priceGridEntry.symbol]?.direction">{{prices[priceGridEntry.symbol]?.lastPrice}}</td>
+          <td [class]="'direction-'+prices[priceGridEntry.symbol]?.direction"><a class="price" (click)="placeOrder(priceGridEntry.symbol)">{{prices[priceGridEntry.symbol]?.lastPrice}}</a></td>
         </tr>
       </table>
       </ng-template>
@@ -29,3 +30,5 @@ Market Status is: {{ marketStatus }}
 
 <button (click)="openMarket()">Open Market</button>
 <button (click)="closeMarket()">Close Market</button>
+
+</div>

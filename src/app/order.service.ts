@@ -54,6 +54,15 @@ export class OrderService {
     });
   }
 
+  public placeOrder(order: Order) {
+    this.messageService.add("Order Service: Creating order: " + JSON.stringify(order));
+    //this.http.post<any>(this.ordersUrl, order).subscribe(result => console.log(JSON.stringify(result)));
+    this.hubConnection.invoke("CreateOrder", JSON.stringify(order))
+    //this.hubConnection.invoke("SayHello", JSON.stringify(order))
+    .then(response => console.log(JSON.stringify(response)))
+    .catch(err => console.error(err));
+  }
+
   public getOrders(): Observable<Order[]> {
     this.messageService.add('OrderService: fetching orders');
     if (!this.logonService.isAuthenticated) {

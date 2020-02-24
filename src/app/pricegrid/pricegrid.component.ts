@@ -4,6 +4,9 @@ import { PricegridService } from '../pricegrid.service';
 import { MessageService } from '../message.service';
 import * as signalR from "@aspnet/signalr";
 import { Price } from '../price';
+import { Order } from '../order';
+import { Account } from '../account';
+import { OrderService } from '../order.service';
 
 @Component({
   selector: 'app-pricegrid',
@@ -13,7 +16,11 @@ import { Price } from '../price';
 export class PricegridComponent implements OnInit {
 
   activePriceGrid;
-  constructor(private priceGridService: PricegridService, private messageService: MessageService) { }
+  constructor(
+    private priceGridService: PricegridService,
+    private messageService: MessageService,
+    private orderService: OrderService
+    ) { }
 
   ngOnInit() {
     this.messageService.add("PGC: Starting Connection");
@@ -21,6 +28,11 @@ export class PricegridComponent implements OnInit {
     this.messageService.add("PGC: Adding Listener");
     //this.priceGridService.addPriceUpdateListener();
     this.getPriceGrids();
+    this.getAccounts();
+  }
+
+  getAccounts(): void {
+    this.priceGridService.getAccounts().subscribe(accounts => this.accounts = accounts);
   }
 
   getPriceGrids(): void {
@@ -38,7 +50,7 @@ export class PricegridComponent implements OnInit {
   }
 
   selectedPriceGrid: number;
-
+  accounts: Account[];
   priceGrids: PriceGrid[];
   priceGridEntries: PriceGridEntry[];
 
@@ -46,6 +58,20 @@ export class PricegridComponent implements OnInit {
   private priceHubUrl = "https://localhost:5001/price";
   private hubConnection: signalR.HubConnection;
   marketStatus;
+
+  public placeOrder(symbol: string) {
+    console.log(symbol);
+    let order:Order = {
+      "clientOrderId": 'made up',
+      "symbol": symbol,
+      "account": this.accounts[0],
+      "quantity": 1,
+      "orderType": 'FillOrKill',
+      "side": 'Buy',
+      "price": this.prices[symbol].lastPrice
+    }
+    this.orderService.placeOrder(order);
+  }
 
   public setMarketStatus(newStatus: string): void {
     this.log("Setting market to: " + newStatus);

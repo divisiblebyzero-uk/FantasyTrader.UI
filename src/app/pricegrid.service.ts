@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { PriceGrid, PriceGridEntry } from './pricegrid';
+import { Account } from './account';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,16 @@ export class PricegridService {
 
   private priceGridsUrl = "https://localhost:5001/api/pricegrids";
   private priceGridEntriesUrl = "https://localhost:5001/api/pricegridentries";
+  private accountsUrl = "https://localhost:5001/api/accounts";
+
+  public getAccounts(): Observable<Account[]> {
+    this.messageService.add('PriceGridService: fetching accounts');
+    return this.http.get<Account[]>(this.accountsUrl)
+    .pipe(
+      tap(_ => this.log('fetched accounts')),
+      catchError(this.handleError<Account[]>('getAccounts', []))
+    );;
+  }
 
   public getPriceGrids(): Observable<PriceGrid[]> {
     this.messageService.add('PriceGridService: fetching price grids');
