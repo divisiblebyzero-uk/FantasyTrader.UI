@@ -1,4 +1,4 @@
-import { Order } from './order';
+import { Order } from './entities';
 
 export const ORDERS: Order[] = [
     {

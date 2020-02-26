@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Order } from './order';
+import { Order } from './entities';
 import { ORDERS } from './mock-orders';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -19,10 +19,14 @@ export class OrderService {
   private ordersUrl = "https://localhost:5001/api/orders";
 
   private hubConnection: signalR.HubConnection;
+  public hubConnected = false;
 
   private startConnectionActual(): void {
     this.hubConnection.start()
-      .then(() => this.messageService.add('Connection started'))
+      .then(() => {
+        this.messageService.add('Connection started');
+        this.hubConnected = true;
+      })
       .catch(err => this.messageService.add('Error while starting connection: ' + err));
   }
 

@@ -10,10 +10,8 @@ import { HeaderComponent } from './header/header.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing/app-routing.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
-
-
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faSync, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @NgModule({
   declarations: [
@@ -37,5 +35,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-
+  constructor(library: FaIconLibrary) {
+    // Add an icon to the library for convenient access in other components
+    library.addIcons(faCircle);
+    library.addIcons(faSync);
+  }
  }

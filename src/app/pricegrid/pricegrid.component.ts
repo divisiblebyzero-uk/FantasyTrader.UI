@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { PriceGrid, PriceGridEntry } from '../pricegrid';
 import { PricegridService } from '../pricegrid.service';
 import { MessageService } from '../message.service';
 import * as signalR from "@aspnet/signalr";
-import { Price } from '../price';
-import { Order } from '../order';
-import { Account } from '../account';
+import { Account, Order, Price, PriceGrid, PriceGridEntry } from '../entities';
 import { OrderService } from '../order.service';
 
 @Component({

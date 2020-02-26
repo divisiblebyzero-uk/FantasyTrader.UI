@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { OktaAuthService } from '@okta/okta-angular';
 import { OrderService } from '../order.service';
 import { LogonService } from '../logon.service';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-header',
@@ -16,11 +17,10 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private oktaAuth: OktaAuthService,
-    private orderService: OrderService,
+    public orderService: OrderService,
     private logonService: LogonService
     ) {
   }
-
   isAuthenticated: boolean;
 
   login() {

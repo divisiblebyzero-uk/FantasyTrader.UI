@@ -3,8 +3,7 @@ import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { PriceGrid, PriceGridEntry } from './pricegrid';
-import { Account } from './account';
+import { Account, PriceGrid, PriceGridEntry } from './entities';
 
 @Injectable({
   providedIn: 'root'
