@@ -6,7 +6,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from './message.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { OktaAuthService } from '@okta/okta-angular';
-import * as signalR from "@aspnet/signalr";
+import * as signalR from "@microsoft/signalr";
 import { LogonService } from './logon.service';
 
 @Injectable({
@@ -21,28 +21,24 @@ export class OrderService {
   private hubConnection: signalR.HubConnection;
   public hubConnected = false;
 
-  private startConnectionActual(): void {
+  public startConnection = () => {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:5001/order')
+      .withAutomaticReconnect()
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+
+    this.hubConnection.onclose(err => {console.log("OnClose: " + err); this.hubConnected = false;});
+    this.hubConnection.onreconnected(() => {console.log("OnReconnected"); this.hubConnected = true;});
+    this.hubConnection.onreconnecting((err) => {console.log("OnReconnecting: " + err); this.hubConnected = false;});
     this.hubConnection.start()
       .then(() => {
         this.messageService.add('Connection started');
         this.hubConnected = true;
       })
       .catch(err => this.messageService.add('Error while starting connection: ' + err));
-  }
 
-  public startConnection = () => {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:5001/order')
-      .build();
-    
-    this.startConnectionActual();
-
-    this.hubConnection.onclose(() => {
-      this.messageService.add('Connection dropped ... waiting 3s to restart');
-      setTimeout(function() {
-        this.startConnectionActual();
-      }, 3000);
-    });
+   
   }
 
   private orders: Subject<Order> = new Subject<Order>();

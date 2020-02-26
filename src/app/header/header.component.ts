@@ -42,7 +42,9 @@ export class HeaderComponent implements OnInit {
     this.logonService.setAuthToken(await this.oktaAuth.getAccessToken());
     this.logonService.setAuthenticated(await this.oktaAuth.isAuthenticated());
     this.isAuthenticated = await this.oktaAuth.isAuthenticated();
-    this.oktaAuth.getUser().then(u => {this.user = u;
+    this.oktaAuth.getUser().then(u => {
+      this.messageService.add("Okta Auth: " + JSON.stringify(u));
+      this.user = u;
       this.username = u.name;
       this.messageService.add("username is: " + this.username);
     });
