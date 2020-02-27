@@ -3,109 +3,66 @@ import { Order } from './entities';
 import { ORDERS } from './mock-orders';
 import { Observable, of, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { MessageService } from './message.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Log } from './log';
 import { OktaAuthService } from '@okta/okta-angular';
 import * as signalR from "@microsoft/signalr";
 import { LogonService } from './logon.service';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
 
-  constructor(private http: HttpClient, private messageService: MessageService, private logonService: LogonService) { }
+  constructor(private logonService: LogonService) { }
 
-  private ordersUrl = "https://localhost:5001/api/orders";
+  private log: Log = new Log('Order Service');
+  private orderHubUrl = environment.urlBase + 'order';
 
   private hubConnection: signalR.HubConnection;
   public hubConnected = false;
 
+  public orders: Order[];
+
   public startConnection = () => {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:5001/order')
+      .withUrl(this.orderHubUrl)
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();
 
-    this.hubConnection.onclose(err => {console.log("OnClose: " + err); this.hubConnected = false;});
-    this.hubConnection.onreconnected(() => {console.log("OnReconnected"); this.hubConnected = true;});
-    this.hubConnection.onreconnecting((err) => {console.log("OnReconnecting: " + err); this.hubConnected = false;});
+    this.hubConnection.onclose(err => {this.log.debug("OnClose: " + err); this.hubConnected = false;});
+    this.hubConnection.onreconnected(() => {this.log.debug("OnReconnected"); this.hubConnected = true;});
+    this.hubConnection.onreconnecting((err) => {this.log.debug("OnReconnecting: " + err); this.hubConnected = false;});
     this.hubConnection.start()
       .then(() => {
-        this.messageService.add('Connection started');
+        this.log.debug('Connection started');
         this.hubConnected = true;
+        this.addNewOrderListener();
+        this.downloadOrders();
       })
-      .catch(err => this.messageService.add('Error while starting connection: ' + err));
-
-   
-  }
-
-  private orders: Subject<Order> = new Subject<Order>();
-
-  public getOrder(): Observable<Order> {
-    return this.orders.asObservable();
+      .catch(err => this.log.error('Error while starting connection: ' + err));
   }
 
   public addNewOrderListener = () => {
     this.hubConnection.on('New Order', (data) => {
-      this.messageService.add('New order: ' + data.clientOrderId);
-      this.orders.next(data);
+      this.log.debug('New order: ' + data.clientOrderId);
+      this.orders.push(data);
     });
   }
 
   public placeOrder(order: Order) {
-    this.messageService.add("Order Service: Creating order: " + JSON.stringify(order));
-    //this.http.post<any>(this.ordersUrl, order).subscribe(result => console.log(JSON.stringify(result)));
+    this.log.debug("Order Service: Creating order: " + JSON.stringify(order));
     this.hubConnection.invoke("CreateOrder", JSON.stringify(order))
-    //this.hubConnection.invoke("SayHello", JSON.stringify(order))
-    .then(response => console.log(JSON.stringify(response)))
-    .catch(err => console.error(err));
+    .then(response => this.log.debug('Create order response: ' + JSON.stringify(response)))
+    .catch(err => this.log.error(err));
   }
 
-  public getOrders(): Observable<Order[]> {
-    this.messageService.add('OrderService: fetching orders');
-    if (!this.logonService.isAuthenticated) {
-      this.messageService.add('OrderService: not logged on');
-      return null;
-    }
-    //let headers = new HttpHeaders();
-    //headers.append('Content-Type', 'application/json');
-    //let token = this.oktaAuth.getAccessToken();
-    let token = this.logonService.authToken;
-    const headers = new HttpHeaders({
-      Authorization: 'Bearer ' + token
-    });
-    headers.append('Authorization', 'Bearer ' + token);
-    return this.http.get<Order[]>(this.ordersUrl, {headers})
-        .pipe(
-          tap(_ => this.log('fetched orders')),
-      catchError(this.handleError<Order[]>('getOrders', []))
-    );;
-    //return of(ORDERS);
-  }
-
-  /**
- * Handle Http operation that failed.
- * Let the app continue.
- * @param operation - name of the operation that failed
- * @param result - optional value to return as the observable result
- */
-private handleError<T> (operation = 'operation', result?: T) {
-  return (error: any): Observable<T> => {
-
-    // TODO: send the error to remote logging infrastructure
-    console.error(error); // log to console instead
-
-    // TODO: better job of transforming error for user consumption
-    this.log(`${operation} failed: ${error.message}`);
-
-    // Let the app keep running by returning an empty result.
-    return of(result as T);
-  };
-}
-
-  private log(message: string) {
-    this.messageService.add(`OrderService: ${message}`);
+  public downloadOrders(): void {
+    this.log.debug('Downloading orders');
+    
+    this.hubConnection.invoke<Order[]>('GetOrders')
+      .then(orders => this.orders = orders)
+      .catch(err => this.log.error(err));
   }
 }
