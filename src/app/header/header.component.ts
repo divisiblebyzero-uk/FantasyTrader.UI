@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../message.service';
 import { Router } from '@angular/router';
 import { OktaAuthService } from '@okta/okta-angular';
-import { OrderService } from '../order.service';
+import { CommsService } from '../comms.service';
 import { LogonService } from '../logon.service';
 import { faCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private messageService: MessageService,
     private oktaAuth: OktaAuthService,
-    public orderService: OrderService,
+    public commsService: CommsService,
     private logonService: LogonService
     ) {
   }
@@ -48,6 +48,9 @@ export class HeaderComponent implements OnInit {
       this.username = u.name;
       this.messageService.add("username is: " + this.username);
     });
+    if (this.isAuthenticated) {
+      this.commsService.startConnections();
+    }
   }
 
 }

@@ -22,8 +22,11 @@
       <a class="nav-link" routerLink="administration" routerLinkActive="active">Administration</a>
     </li>
     <li class="nav-item">
-      <span [class]="orderService.hubConnected?'connectedIcon':'disconnectedIcon'">
-        <fa-icon [icon]="['fas', 'circle']" size="lg" placement="right" [ngbTooltip]="orderService.hubConnected?'Order Service is Connected':'Order Service is Disconnected'"></fa-icon>
+      <span [class]="this.commsService.ordersHub?.state=='Connected'?'connectedIcon':'disconnectedIcon'">
+        <fa-icon [icon]="['fas', 'circle']" size="lg" placement="right" [ngbTooltip]="this.commsService.ordersHub?.state=='Connected'?'Order Service is Connected':'Order Service is Disconnected'"></fa-icon>
+      </span>
+      <span [class]="this.commsService.pricesHub?.state=='Connected'?'connectedIcon':'disconnectedIcon'">
+        <fa-icon [icon]="['fas', 'circle']" size="lg" placement="right" [ngbTooltip]="this.commsService.pricesHub?.state=='Connected'?'Price Service is Connected':'Price Service is Disconnected'"></fa-icon>
       </span>
     </li>
   </ul>
