@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Order } from '../entities';
-import { OrderService } from '../order.service';
+import { CommsService } from '../comms.service';
 import { ORDERS } from '../mock-orders';
 import { LogonService } from '../logon.service';
 import { faSync } from '@fortawesome/free-solid-svg-icons';
@@ -17,23 +17,12 @@ export class OrdersgridComponent implements OnInit {
   faSync = faSync;
   log = new Log('Ordersgrid');
 
-  constructor(public orderService: OrderService, private logonService: LogonService) { }
+  constructor(public commsService: CommsService, private logonService: LogonService) { }
 
-  getOrders(): void {
-    this.orderService.startConnection();
-  }
-  
   ngOnInit() {
-    if (this.logonService.isAuthenticated) {
-      this.getOrders();
-    } else {
-      this.logonService.getAuthStatusChanges().subscribe(isAuth => {
-        if (isAuth) { this.getOrders() };
-      });
-    }
   }
 
   refreshOrders(): void {
-    this.orderService.downloadOrders();
+    this.commsService.downloadOrders();
   }
 }

@@ -17,21 +17,17 @@ export class PricegridComponent implements OnInit {
 
   activePriceGrid;
   constructor(
-    private priceGridService: PricegridService,
+    public priceGridService: PricegridService,
     public commsService: CommsService
     ) { }
 
   ngOnInit() {
-    this.getPriceGrids();
+    this.priceGridService.getPriceGrids();
     this.getAccounts();
   }
 
   getAccounts(): void {
     this.priceGridService.getAccounts().subscribe(accounts => this.accounts = accounts);
-  }
-
-  getPriceGrids(): void {
-    this.priceGridService.getPriceGrids().subscribe(priceGrids => this.priceGrids = priceGrids);
   }
 
   tabChanged(newIndex) {
@@ -40,7 +36,6 @@ export class PricegridComponent implements OnInit {
 
   selectedPriceGrid: number;
   accounts: Account[];
-  priceGrids: PriceGrid[];
   priceGridEntries: PriceGridEntry[];
 
   public placeOrder(symbol: string) {

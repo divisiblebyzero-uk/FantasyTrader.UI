@@ -6,7 +6,7 @@
       Click on a price grid to show that grid
     </ng-template>
   </li>
-  <li *ngFor="let priceGrid of priceGrids" ngbNavItem [ngbNavItem]="priceGrid.name">
+  <li *ngFor="let priceGrid of this.priceGridService.priceGrids" ngbNavItem [ngbNavItem]="priceGrid.name">
     <a ngbNavLink>{{priceGrid.name}}</a>
     <ng-template ngbNavContent>
       <table class="table">

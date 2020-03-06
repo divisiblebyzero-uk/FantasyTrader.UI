@@ -29,7 +29,7 @@ export class CommsService {
 
   private prepareConnection(name: string, url: string): signalR.HubConnection {
     let hub: signalR.HubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(url)
+      .withUrl(url, {accessTokenFactory: () => this.logonService.authToken})
       .withAutomaticReconnect()
       .configureLogging(signalR.LogLevel.Information)
       .build();

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MessageService } from './message.service';
+import { Log, LogLevel } from './log';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
@@ -7,20 +7,22 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class LogonService {
 
-  constructor(private messageService: MessageService) { }
+  constructor() { }
 
   isAuthenticated: boolean;
   isAuthenticatedObservable: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   authToken: string;
 
+  private log: Log = new Log('LogonService', LogLevel.Info);
+
   setAuthenticated(authenticated:boolean): void {
-    this.messageService.add("Logon Service: setting authenticated to " + authenticated);
+    this.log.debug("Logon Service: setting authenticated to " + authenticated);
     this.isAuthenticated = authenticated;
     this.isAuthenticatedObservable.next(this.isAuthenticated);
   }
 
   setAuthToken(authToken: string): void {
-    this.messageService.add("Logon Service: setting authToken to " + authToken);
+    this.log.debug("Logon Service: setting authToken to " + authToken);
     this.authToken = authToken;
   }
 
