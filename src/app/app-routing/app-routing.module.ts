@@ -1,37 +1,41 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from '../dashboard/dashboard.component'
-import {
-    OktaAuthModule,
-    OktaCallbackComponent,
-  } from '@okta/okta-angular';
+import { ProfileComponent } from '../profile/profile.component';
+import { AuthGuard } from '../auth.guard';
+import { InterceptorService } from '../interceptor.service';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 const routes: Routes = [
     {
-        path: 'dashboard',
+        path: '',
         component: DashboardComponent,
     }, {
-      path: '',
-      redirectTo: '/dashboard',
-      pathMatch: 'full'
+      path: 'dashboard',
+      redirectTo: '/',
+      pathMatch: 'full',
+      canActivate: [AuthGuard]
     },
-    { path: 'implicit/callback', component: OktaCallbackComponent }
+    {
+      path: 'profile',
+      component: ProfileComponent,
+      canActivate: [AuthGuard]
+    }
 ];
-
-const config = {
-    issuer: 'https://dev-648496.okta.com/oauth2/default',
-    redirectUri: 'http://localhost:4200/implicit/callback',
-    clientId: '0oa29se01mINjBjA14x6',
-    scope: 'openid profile email'
-  };
   
 @NgModule({
     imports: [
-        RouterModule.forRoot(routes),
-        OktaAuthModule.initAuth(config)
+        RouterModule.forRoot(routes)
     ],
     exports: [
         RouterModule
+    ],
+    providers: [
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: InterceptorService,
+        multi: true
+      }
     ],
     declarations: []
 })

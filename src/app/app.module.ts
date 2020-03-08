@@ -12,6 +12,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing/app-routing.module';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSync, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { faSync, faCircle } from '@fortawesome/free-solid-svg-icons';
     MessageComponent,
     PricegridComponent,
     HeaderComponent,
-    DashboardComponent    
+    DashboardComponent,
+    ProfileComponent    
   ],
   imports: [
     BrowserModule,

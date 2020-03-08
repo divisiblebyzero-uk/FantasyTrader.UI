@@ -31,12 +31,14 @@ export class PricegridComponent implements OnInit {
   }
 
   tabChanged(newIndex) {
-    this.priceGridService.getPriceGridEntries(this.activePriceGrid).subscribe(priceGridEntries => {this.log.debug("Received: " + JSON.stringify(priceGridEntries));this.priceGridEntries = priceGridEntries;});
+    console.log('Current pricegrids: ' + JSON.stringify(this.priceGridService.priceGridEntries));
+    this.priceGridService.getPriceGridEntries(this.activePriceGrid);
+    console.log('Current pricegrids: ' + JSON.stringify(this.priceGridService.priceGridEntries));
   }
 
   selectedPriceGrid: number;
   accounts: Account[];
-  priceGridEntries: PriceGridEntry[];
+  
 
   public placeOrder(symbol: string) {
     this.log.info(symbol);

@@ -5,14 +5,13 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Account, PriceGrid, PriceGridEntry } from './entities';
 import { Log, LogLevel } from './log';
 import { LogonService } from './logon.service';
-import { OktaAuthService } from '@okta/okta-angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PricegridService {
 
-  constructor(private http: HttpClient, private logonService: LogonService, private oktaAuthService: OktaAuthService ) { }
+  constructor(private http: HttpClient, private logonService: LogonService) { }
 
   private log: Log = new Log('PricegridService', LogLevel.Info);
   private priceGridsUrl = "https://localhost:5001/api/pricegrids";
@@ -21,15 +20,8 @@ export class PricegridService {
 
   private authToken: string;
 
-  private priceGrids: PriceGrid[];
-
-  private async getAuthToken() {
-    this.log.info("! getting authtoken");
-    if (this.authToken) return this.authToken;
-    this.authToken = await this.oktaAuthService.getAccessToken();
-    this.log.info("AuthToken is: " + this.authToken);
-    return this.authToken;
-  }
+  public priceGrids: PriceGrid[];
+  public priceGridEntries: PriceGridEntry[];
 
   public getAccounts(): Observable<Account[]> {
     this.log.debug('PriceGridService: fetching accounts');
@@ -41,25 +33,24 @@ export class PricegridService {
   }
 
   public async getPriceGrids() {
-    const authToken = await this.oktaAuthService.getAccessToken();
-    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + authToken);
-
-    this.http.get<PriceGrid[]>(this.priceGridsUrl, {headers})
+    
+    this.http.get<PriceGrid[]>(this.priceGridsUrl)
       .pipe(
-        tap(_ => this.log.debug('fetched price grids')),
+        tap(_ => this.log.info('fetched price grids')),
         catchError(this.handleError<PriceGrid[]>('getPriceGrids', []))
       )
       .subscribe(priceGrids => this.priceGrids = priceGrids);
   }
 
-  public getPriceGridEntries(priceGridName: string): Observable<PriceGridEntry[]> {
+  public getPriceGridEntries(priceGridName: string) {
     this.log.debug('PriceGridService: fetching price grids entries');
 
-    return this.http.get<PriceGridEntry[]>(this.priceGridEntriesUrl)
+    this.http.get<PriceGridEntry[]>(this.priceGridEntriesUrl)
       .pipe(
         tap(_ => this.log.debug('fetched price grid entries')),
         catchError(this.handleError<PriceGridEntry[]>('getPriceGridEntries', []))
-      );;
+      )
+      .subscribe(priceGridEntries => this.priceGridEntries = priceGridEntries);
   }
 
   /**

@@ -2,19 +2,19 @@ import { Injectable } from '@angular/core';
 import { Order, Price } from './entities';
 import { ORDERS } from './mock-orders';
 import { Observable, of, Subject } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { mergeMap, catchError } from 'rxjs/operators';
 import { Log } from './log';
-import { OktaAuthService } from '@okta/okta-angular';
 import * as signalR from "@microsoft/signalr";
 import { LogonService } from './logon.service';
 import { environment } from '../environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommsService {
 
-  constructor(private logonService: LogonService) { }
+  constructor(private logonService: LogonService, private auth: AuthService) { }
 
   private log: Log = new Log('Comms Service');
   private ordersHubUrl = environment.urlBase + 'order';
@@ -24,15 +24,16 @@ export class CommsService {
   public pricesHub: signalR.HubConnection;
 
   public orders: Order[];
-  public prices: Price[];
+  public prices: Price[] = [];
   public marketStatus;
 
-  private prepareConnection(name: string, url: string): signalR.HubConnection {
+  
+  private prepareConnection(name: string, url: string, token: string): signalR.HubConnection {
     let hub: signalR.HubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(url, {accessTokenFactory: () => this.logonService.authToken})
-      .withAutomaticReconnect()
-      .configureLogging(signalR.LogLevel.Information)
-      .build();
+    .withUrl(url, {accessTokenFactory: () => token})
+    .withAutomaticReconnect()
+    .configureLogging(signalR.LogLevel.Information)
+    .build();
 
     hub.onclose(err => { this.log.error(name + ': OnClose: ' + err); });
     hub.onreconnected(() => { this.log.debug(name + ': OnReconnected'); });
@@ -42,23 +43,28 @@ export class CommsService {
   }
 
   public startConnections = () => {
-    this.ordersHub = this.prepareConnection('Orders', this.ordersHubUrl);
-    this.ordersHub.start()
-      .then(() => {
-        this.log.debug('Orders: Connection started');
-        this.addOrdersHubListeners();
-        this.downloadOrders();
-      })
-      .catch(err => this.log.error('Error while starting connection: ' + err));
 
-    this.pricesHub = this.prepareConnection('Prices', this.pricesHubUrl);
-    this.pricesHub.start()
-      .then(() => {
-        this.log.debug('Prices: Connection started');
-        this.addPricesHubListeners();
-        this.getInitialPricesHubInformation();
-      })
-      .catch(err => this.log.error('Error while starting connection: ' + err));
+    this.auth.getTokenSilently$().subscribe(token => {
+      this.ordersHub = this.prepareConnection('Orders', this.ordersHubUrl, token);
+      this.ordersHub.start()
+        .then(() => {
+          this.log.debug('Orders: Connection started');
+          this.addOrdersHubListeners();
+          this.downloadOrders();
+        })
+        .catch(err => this.log.error('Error while starting connection: ' + err));
+  
+      this.pricesHub = this.prepareConnection('Prices', this.pricesHubUrl, token);
+      this.pricesHub.start()
+        .then(() => {
+          this.log.debug('Prices: Connection started');
+          this.addPricesHubListeners();
+          this.getInitialPricesHubInformation();
+        })
+        .catch(err => this.log.error('Error while starting connection: ' + err));
+      }
+      );
+
   }
 
   // Order Hub Functions

@@ -14,7 +14,7 @@
           <th>Symbol</th>
           <th>Price</th>
         </tr>
-        <tr *ngFor="let priceGridEntry of priceGridEntries">
+        <tr *ngFor="let priceGridEntry of this.priceGridService.priceGridEntries">
           <td>{{priceGridEntry.symbol}}</td>
           <td [class]="'direction-'+commsService.prices[priceGridEntry.symbol]?.direction"><a class="price" (click)="placeOrder(priceGridEntry.symbol)">{{commsService.prices[priceGridEntry.symbol]?.lastPrice}}</a></td>
         </tr>

@@ -3,14 +3,17 @@
   <a class="navbar-brand" href="#">Fantasy Trader</a>
   <!-- Links -->
   <ul class="nav navbar-nav" routerLinkActive="active">
-    <li class="nav-item dropdown" *ngIf="isAuthenticated">
-      <a class="nav-link" href="#" data-toggle="dropdown">{{username}}</a>
+    <li class="nav-item dropdown" *ngIf="auth.userProfile$ | async as profile">
+      <a class="nav-link" href="#" data-toggle="dropdown">{{profile.name}}</a>
       <div class="dropdown-menu">
-        <a class="dropdown-item" href="#" (click)="logout()">Logout</a>
+        <a class="dropdown-item" href="#" (click)="auth.logout()">Logout</a>
       </div>
     </li>
-    <li class="nav-item" *ngIf="!isAuthenticated">
-      <button class="btn btn-success" *ngIf="!isAuthenticated" (click)="login()"> Login </button>
+    <li class="nav-item" >
+      <button class="btn btn-success" *ngIf="!auth.loggedIn" (click)="this.auth.login()"> Login </button>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="profile" routerLinkActive="active" *ngIf="auth.loggedIn">Profile</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" routerLink="dashboard" routerLinkActive="active">Dashboard</a>

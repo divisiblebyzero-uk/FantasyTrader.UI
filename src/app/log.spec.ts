@@ -1,7 +1,7 @@
-import { Log } from './log';
+import { Log, LogLevel } from './log';
 
 describe('Log', () => {
   it('should create an instance', () => {
-    expect(new Log()).toBeTruthy();
+    expect(new Log('Testing', LogLevel.Info)).toBeTruthy();
   });
 });
