@@ -16,6 +16,7 @@ export class Order {
     price: number;
     percentComplete?: number;
     created?: Date;
+    averageFillPrice?: number;
 }
 
 export class Price {

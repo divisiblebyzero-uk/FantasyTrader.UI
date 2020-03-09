@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
   <div class="row">
     <span class="btn"><h4 (click)="showTodayOrders = !showTodayOrders">Today's orders</h4></span>
@@ -15,19 +14,21 @@
         <th>Type</th>
         <th>Side</th>
         <th>Percent Complete</th>
+        <th>Average Fill Price</th>
       </tr>
       <tr *ngFor="let order of commsService.todayOrders">
         <td>{{order.created | date:'medium'}}</td>
         <td>{{order.id}}</td>
         <td>{{order.clientOrderId}}</td>
         <td>{{order.symbol}}</td>
-        <td>{{order.account}}</td>
+        <td>{{order.account?.name}}</td>
         <td>{{order.quantity}}</td>
         <td>{{order.fillQuantity}}</td>
         <td>{{order.orderState}}</td>
         <td>{{order.orderType}}</td>
         <td>{{order.side}}</td>
-        <td>{{order.percentComplete}}</td>
+        <td>{{order.percentComplete|percent}}</td>
+        <td>{{order.averageFillPrice}}</td>
       </tr>
     </table>
   </div>
@@ -46,19 +47,21 @@
         <th>Type</th>
         <th>Side</th>
         <th>Percent Complete</th>
+        <th>Average Fill Price</th>
       </tr>
       <tr *ngFor="let order of commsService.yesterdayOrders">
         <td>{{order.created | date:'medium'}}</td>
         <td>{{order.id}}</td>
         <td>{{order.clientOrderId}}</td>
         <td>{{order.symbol}}</td>
-        <td>{{order.account}}</td>
+        <td>{{order.account?.name}}</td>
         <td>{{order.quantity}}</td>
         <td>{{order.fillQuantity}}</td>
         <td>{{order.orderState}}</td>
         <td>{{order.orderType}}</td>
         <td>{{order.side}}</td>
-        <td>{{order.percentComplete}}</td>
+        <td>{{order.percentComplete|percent}}</td>
+        <td>{{order.averageFillPrice}}</td>
       </tr>
     </table>
   </div>
@@ -77,19 +80,21 @@
         <th>Type</th>
         <th>Side</th>
         <th>Percent Complete</th>
+        <th>Average Fill Price</th>
       </tr>
       <tr *ngFor="let order of commsService.olderOrders">
         <td>{{order.created | date:'medium'}}</td>
         <td>{{order.id}}</td>
         <td>{{order.clientOrderId}}</td>
         <td>{{order.symbol}}</td>
-        <td>{{order.account}}</td>
+        <td>{{order.account?.name}}</td>
         <td>{{order.quantity}}</td>
         <td>{{order.fillQuantity}}</td>
         <td>{{order.orderState}}</td>
         <td>{{order.orderType}}</td>
         <td>{{order.side}}</td>
-        <td>{{order.percentComplete}}</td>
+        <td>{{order.percentComplete|percent}}</td>
+        <td>{{order.averageFillPrice}}</td>
       </tr>
     </table>
   </div>

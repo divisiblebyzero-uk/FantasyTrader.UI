@@ -35,19 +35,28 @@ export class CommsService {
   private today: Date;
   private daysDifferenceFromToday(inputDate: Date): number {
     const theDate = new Date(inputDate);
-    console.log("Comparing: " + theDate + " with: " + this.today + " to get: " + (this.today.getTime() - theDate.getTime()) / (1000*60*60*24));
     return Math.floor((this.today.getTime() - theDate.getTime()) / (1000*60*60*24));
+  }
+
+  private addOrUpdate(order: Order, orderArray: Order[]) {
+    let index = orderArray.findIndex(o => o.id === order.id);
+    //console.log("index is: " + orderInArray); 
+    if (index == -1) {
+      orderArray.push(order);
+    } else {
+      orderArray.splice(index, 1, order);
+    }
   }
 
   private addOrder(order: Order) {
     if (order.created) {
       const days = this.daysDifferenceFromToday(order.created);
       if (days < 0) {
-        this.todayOrders.push(order);
+        this.addOrUpdate(order, this.todayOrders);
       } else if (days == 0) {
-        this.yesterdayOrders.push(order);
+        this.addOrUpdate(order, this.yesterdayOrders);
       } else {
-        this.olderOrders.push(order);
+        this.addOrUpdate(order, this.olderOrders);
       }
     } else {
       this.todayOrders.push(order);
@@ -100,6 +109,10 @@ export class CommsService {
   public addOrdersHubListeners = () => {
     this.ordersHub.on('New Order', (data) => {
       this.log.debug('New order: ' + data.clientOrderId);
+      this.addOrder(data);
+    });
+    this.ordersHub.on('Order Update', (data) => {
+      this.log.debug('Order update: ' + data.clientOrderId);
       this.addOrder(data);
     });
   }
