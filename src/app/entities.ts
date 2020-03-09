@@ -15,6 +15,7 @@ export class Order {
     side: string;
     price: number;
     percentComplete?: number;
+    created?: Date;
 }
 
 export class Price {

@@ -14,7 +14,10 @@ import { AuthService } from './auth.service';
 })
 export class CommsService {
 
-  constructor(private logonService: LogonService, private auth: AuthService) { }
+  constructor(private logonService: LogonService, private auth: AuthService) {
+    const todayDateTime = new Date();
+    this.today = new Date(todayDateTime.getFullYear(), todayDateTime.getMonth(), todayDateTime.getDate());
+  }
 
   private log: Log = new Log('Comms Service');
   private ordersHubUrl = environment.urlBase + 'order';
@@ -23,10 +26,34 @@ export class CommsService {
   public ordersHub: signalR.HubConnection;
   public pricesHub: signalR.HubConnection;
 
-  public orders: Order[];
+  public todayOrders: Order[];
+  public yesterdayOrders: Order[];
+  public olderOrders: Order[];
   public prices: Price[] = [];
   public marketStatus;
 
+  private today: Date;
+  private daysDifferenceFromToday(inputDate: Date): number {
+    const theDate = new Date(inputDate);
+    console.log("Comparing: " + theDate + " with: " + this.today + " to get: " + (this.today.getTime() - theDate.getTime()) / (1000*60*60*24));
+    return Math.floor((this.today.getTime() - theDate.getTime()) / (1000*60*60*24));
+  }
+
+  private addOrder(order: Order) {
+    if (order.created) {
+      const days = this.daysDifferenceFromToday(order.created);
+      if (days < 0) {
+        this.todayOrders.push(order);
+      } else if (days == 0) {
+        this.yesterdayOrders.push(order);
+      } else {
+        this.olderOrders.push(order);
+      }
+    } else {
+      this.todayOrders.push(order);
+    }
+    
+  }
   
   private prepareConnection(name: string, url: string, token: string): signalR.HubConnection {
     let hub: signalR.HubConnection = new signalR.HubConnectionBuilder()
@@ -67,11 +94,13 @@ export class CommsService {
 
   }
 
+
+
   // Order Hub Functions
   public addOrdersHubListeners = () => {
     this.ordersHub.on('New Order', (data) => {
       this.log.debug('New order: ' + data.clientOrderId);
-      this.orders.push(data);
+      this.addOrder(data);
     });
   }
 
@@ -86,7 +115,12 @@ export class CommsService {
     this.log.debug('Downloading orders');
 
     this.ordersHub.invoke<Order[]>('GetOrders')
-      .then(orders => this.orders = orders)
+      .then(orders => {
+        this.todayOrders = [];
+        this.yesterdayOrders = [];
+        this.olderOrders = [];
+        orders.forEach(order => this.addOrder(order));
+      })
       .catch(err => this.log.error(err));
   }
 

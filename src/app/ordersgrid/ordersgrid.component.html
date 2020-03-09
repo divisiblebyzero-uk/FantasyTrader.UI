@@ -1,25 +1,96 @@
 
-
 <div class="container-fluid">
   <div class="row">
-    <div class="col">
-      <span class="display-3">Recent orders</span>
-    </div>
-    <div class="col">
-      <span class="syncIcon" (mouseover)="spinning=true" (mouseout)="spinning=false">
-        <fa-icon [icon]="faSync" size="3x" [spin]="spinning" (click)="refreshOrders()"></fa-icon>
-      </span>
-    </div>
-  </div>  
-  <hr/>
-    <div class="row">
-        <div *ngFor="let order of commsService.orders" class="col-md-6 col-lg-4 col-xl-3 py-2">
-            <div class="card" style="width: 12rem;">
-                <div class="card-body">
-                  <h5 class="card-title">{{order.clientOrderId}}</h5>
-                  <p class="card-text">{{order.side}} {{order.symbol}} x {{order.quantity}} @ {{order.price}}</p>
-                </div>
-              </div>
-        </div>
-    </div>
+    <span class="btn"><h4 (click)="showTodayOrders = !showTodayOrders">Today's orders</h4></span>
+    <table class="table table-sm" [ngbCollapse]="!showTodayOrders">
+      <tr>
+        <th>Created</th>
+        <th>Id</th>
+        <th>ClOrdId</th>
+        <th>Symbol</th>
+        <th>Account</th>
+        <th>Quantity</th>
+        <th>Fills</th>
+        <th>State</th>
+        <th>Type</th>
+        <th>Side</th>
+        <th>Percent Complete</th>
+      </tr>
+      <tr *ngFor="let order of commsService.todayOrders">
+        <td>{{order.created | date:'medium'}}</td>
+        <td>{{order.id}}</td>
+        <td>{{order.clientOrderId}}</td>
+        <td>{{order.symbol}}</td>
+        <td>{{order.account}}</td>
+        <td>{{order.quantity}}</td>
+        <td>{{order.fillQuantity}}</td>
+        <td>{{order.orderState}}</td>
+        <td>{{order.orderType}}</td>
+        <td>{{order.side}}</td>
+        <td>{{order.percentComplete}}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="row">
+    <span class="btn"><h4 (click)="showYesterdayOrders = !showYesterdayOrders">Yesterday's orders</h4></span>
+    <table class="table table-sm" [ngbCollapse]="!showYesterdayOrders">
+      <tr>
+        <th>Created</th>
+        <th>Id</th>
+        <th>ClOrdId</th>
+        <th>Symbol</th>
+        <th>Account</th>
+        <th>Quantity</th>
+        <th>Fills</th>
+        <th>State</th>
+        <th>Type</th>
+        <th>Side</th>
+        <th>Percent Complete</th>
+      </tr>
+      <tr *ngFor="let order of commsService.yesterdayOrders">
+        <td>{{order.created | date:'medium'}}</td>
+        <td>{{order.id}}</td>
+        <td>{{order.clientOrderId}}</td>
+        <td>{{order.symbol}}</td>
+        <td>{{order.account}}</td>
+        <td>{{order.quantity}}</td>
+        <td>{{order.fillQuantity}}</td>
+        <td>{{order.orderState}}</td>
+        <td>{{order.orderType}}</td>
+        <td>{{order.side}}</td>
+        <td>{{order.percentComplete}}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="row">
+    <span class="btn"><h4 (click)="showOlderOrders = !showOlderOrders">Older orders</h4></span>
+    <table class="table table-sm" [ngbCollapse]="!showOlderOrders">
+      <tr>
+        <th>Created</th>
+        <th>Id</th>
+        <th>ClOrdId</th>
+        <th>Symbol</th>
+        <th>Account</th>
+        <th>Quantity</th>
+        <th>Fills</th>
+        <th>State</th>
+        <th>Type</th>
+        <th>Side</th>
+        <th>Percent Complete</th>
+      </tr>
+      <tr *ngFor="let order of commsService.olderOrders">
+        <td>{{order.created | date:'medium'}}</td>
+        <td>{{order.id}}</td>
+        <td>{{order.clientOrderId}}</td>
+        <td>{{order.symbol}}</td>
+        <td>{{order.account}}</td>
+        <td>{{order.quantity}}</td>
+        <td>{{order.fillQuantity}}</td>
+        <td>{{order.orderState}}</td>
+        <td>{{order.orderType}}</td>
+        <td>{{order.side}}</td>
+        <td>{{order.percentComplete}}</td>
+      </tr>
+    </table>
+  </div>
 </div>
