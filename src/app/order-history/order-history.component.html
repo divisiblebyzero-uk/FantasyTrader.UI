@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h4 class="modal-title">Order History for {{orderId}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <table class="table table-sm">
+        <tr>
+            <th>Timestamp</th>
+            <th>User</th>
+            <th>Message</th>
+        </tr>
+        <tr *ngFor="let orderHistory of orderHistories">
+            <td>{{orderHistory.timestamp | date:'dd/MM/yyyy HH:mm:ss.SSSS'}}</td>
+            <td>{{orderHistory.user?.name}}</td>
+            <td>{{orderHistory.message}}</td>
+        </tr>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+  </div>

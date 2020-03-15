@@ -18,7 +18,7 @@
       </tr>
       <tr *ngFor="let order of commsService.todayOrders">
         <td>{{order.created | date:'medium'}}</td>
-        <td>{{order.id}}</td>
+        <td><a href (click)="!!showOrderHistory(order)">{{order.id}}</a></td>
         <td>{{order.clientOrderId}}</td>
         <td>{{order.symbol}}</td>
         <td>{{order.account?.name}}</td>

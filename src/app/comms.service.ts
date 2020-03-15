@@ -137,6 +137,11 @@ export class CommsService {
       .catch(err => this.log.error(err));
   }
 
+  public getOrderHistories(orderId: number) {
+    this.log.debug("Order Service: Getting Histories for " + orderId);
+    return this.ordersHub.invoke("GetOrderHistories", orderId);
+  }
+
 
   // Price Hub Functions
   private getInitialPricesHubInformation() {

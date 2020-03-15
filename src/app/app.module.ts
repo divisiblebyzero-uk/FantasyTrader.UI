@@ -13,6 +13,7 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSync, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { ProfileComponent } from './profile/profile.component';
+import { OrderHistoryComponent } from './order-history/order-history.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ProfileComponent } from './profile/profile.component';
     PricegridComponent,
     HeaderComponent,
     DashboardComponent,
-    ProfileComponent   
+    ProfileComponent,
+    OrderHistoryComponent   
   ],
   imports: [
     BrowserModule,
